@@ -1,13 +1,21 @@
 import { useRef } from "react";
-import { Mesh } from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, GizmoHelper, GizmoViewcube, GizmoViewport } from "@react-three/drei";
+import { Mesh, Texture, TextureLoader } from "three";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import {
+  OrbitControls,
+  GizmoHelper,
+  GizmoViewcube,
+  GizmoViewport,
+} from "@react-three/drei";
+import image from "./assets/react.svg";
 import "./index.css";
 
 // The box will rotate on each frame
 function AnimatedBox(): React.JSX.Element {
   // Reference to the box mesh
   const boxRef = useRef<Mesh | null>(null);
+  // Load the texture
+  const texture: Texture<HTMLImageElement> = useLoader(TextureLoader, image);
 
   // Rotate the box on each frame
   useFrame(() => {
@@ -20,7 +28,7 @@ function AnimatedBox(): React.JSX.Element {
   return (
     <mesh ref={boxRef}>
       <boxGeometry args={[3, 3, 3]} />
-      <meshStandardMaterial color={0x00bfff} />
+      <meshBasicMaterial map={texture} />
     </mesh>
   );
 }
@@ -32,7 +40,10 @@ function App(): React.JSX.Element {
         {/* Helper */}
         <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
           <GizmoViewcube />
-          <GizmoViewport axisColors={["red", "green", "blue"]} labelColor="black" />
+          <GizmoViewport
+            axisColors={["red", "green", "blue"]}
+            labelColor="black"
+          />
         </GizmoHelper>
         <axesHelper args={[10]} />
         <gridHelper args={[20, 30]} />
