@@ -4,7 +4,9 @@ import {
   Texture,
   TextureLoader,
   // SpotLightHelper,
-  // Object3D
+  DirectionalLightHelper,
+  // PointLightHelper,
+  Object3D
 } from "three";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import {
@@ -12,41 +14,40 @@ import {
   GizmoHelper,
   GizmoViewcube,
   GizmoViewport,
-  // useHelper,
+  useHelper,
   useGLTF,
 } from "@react-three/drei";
 // import { useControls } from "leva";
-// import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import image from "./assets/react.svg";
 import "./index.css";
 
 function LightWithHelper(): React.JSX.Element {
-  // const lightRef = useRef<Object3D | null>(null);
+  const lightRef = useRef<Object3D | null>(null);
 
-  // useHelper(lightRef, SpotLightHelper, "white");
+  useHelper(lightRef, DirectionalLightHelper, "white");
 
   return (
     <>
-      /* A spotlight with a helper to visualize its position and direction
-      penumbral angle is set to 1 for a soft edge */
+      {/* A spotlight with a helper to visualize its position and direction
+      penumbra angle is set to 1 for a soft edge */}
       {/* <spotLight
         ref={lightRef}
-        intensity={90}
-        position={[2, 5, 1]}
-        angle={Math.PI / 5}
+        intensity={100}
+        position={[0, 150, 150]}
+        angle={Math.PI / 2}
         penumbra={0.2}
         castShadow
       /> */}
-      <directionalLight position={[1, 1, 2]} />
-      {/* <ambientLight intensity={2} /> */}
-      {/* <pointLight intensity={50} position={[2,5,1]} /> */}
+      <directionalLight ref={lightRef} position={[0, 150, 140]} />
+      <ambientLight intensity={0.7} />
+      {/* <pointLight ref={lightRef} intensity={100} position={[0, 170, 150]} /> */}
     </>
   );
 }
 
 function Room(): React.JSX.Element {
   const result = useGLTF("/room-studio.glb");
-  return <primitive object={result.scene} />;
+  return <primitive object={result.scene} position={[0, -120, 0]} />;
 }
 
 // The box will rotate on each frame
@@ -99,15 +100,15 @@ function App(): React.JSX.Element {
         {/* Orbit Camera */}
         <OrbitControls />
         <LightWithHelper />
-        <AnimatedBox />
-        <mesh
+        {/* <AnimatedBox /> */}
+        {/* <mesh
           rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -3, 0]}
           receiveShadow
         >
           <planeGeometry args={[100, 100]} />
           <meshStandardMaterial color="white" />
-        </mesh>
+        </mesh> */}
         <Room />
       </Canvas>
     </div>
